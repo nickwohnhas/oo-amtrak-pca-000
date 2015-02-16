@@ -1,0 +1,18 @@
+ [
+  {"station name": "Boston, MA - South Station", "remaining seats": 2},
+  {"station name": "Boston, MA - Back Bay", "remaining seats": 7},
+  {"station name": "Westwood, MA - Route 128", "remaining seats": 1},
+  {"station name": "Providence, RI", "remaining seats": 3},
+  {"station name": "New London, CT", "remaining seats": 9},
+  {"station name": "New Haven, CT", "remaining seats": 3},
+  {"station name": "Stamford, CT", "remaining seats": 3},
+  {"station name": "New York, NY - Penn Station", "remaining seats": 8},
+  {"station name": "Newark, NJ - Penn Station", "remaining seats": 9},
+  {"station name": "Iselin, NJ - Metropark", "remaining seats": 1},
+  {"station name": "Trenton, NJ", "remaining seats": 9},
+  {"station name": "Philadelphia, PA - 30th Street Station", "remaining seats": 10},
+  {"station name": "Wilmington, DE", "remaining seats": 4},
+  {"station name": "Baltimore, MD - Penn Station", "remaining seats": 7},
+  {"station name": "BWI Airport, MD - Thurgood Marshall Airport", "remaining seats": 7},
+  {"station name": "Washington, DC - Union Station", "remaining seats": 8}
+]
