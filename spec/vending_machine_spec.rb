@@ -11,9 +11,11 @@ describe "VendingMachine" do
     end
   end
 
-  let(:acela_machine)  { VendingMachine.new(acela_file)           }
-  let(:surf_machine)   { VendingMachine.new(surfliner_file)       }
-  let(:machines)       { [acela_machine, surf_machine]            }
+  let(:acela_machine) { VendingMachine.new(acela_file) }
+  let(:surf_machine) { VendingMachine.new(surfliner_file) }
+  let(:machines)  { [acela_machine, surf_machine] }
+  let(:thank_you) { "Transaction completed, thank you for choosing Amtrak." }
+  let(:sorry) { "Tickets can't be purchased because there are not enough seats. We aplogize for the inconvenience." }
 
   describe "#load_json_file" do
     
@@ -72,7 +74,6 @@ describe "VendingMachine" do
       expect { acela_machine.purchase_tickets("Providence, RI", "Wilmington, DE", 1, "Javier O'Hara") } 
     end
 
-    let(:not_enough_seats) { surf_machine.purchase_tickets("Surf, CA", "Ventura, CA", 1, "Javier O'Hara") }
     let(:enough_seats) { acela_machine.purchase_tickets("Providence, RI", "Wilmington, DE", 1, "Javier O'Hara") }
 
     it "issues a ticket when there are remaining seats and train is headed south" do
@@ -96,7 +97,7 @@ describe "VendingMachine" do
     end
 
     it "thanks the customer for purchasing tickets" do
-      expect(enough_seats).to eq("Transaction completed, thank you for choosing Amtrak.")
+      expect(enough_seats).to eq(thank_you)
     end
 
     it "can purchase multiple tickets" do
@@ -121,26 +122,49 @@ describe "VendingMachine" do
 
     it "reduces the number of seats left by the number of tickets issued when train is headed north" do
       ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
-      expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
+      expect(Ticket).to receive(:new).exactly(2).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
       
-      acela_machine.purchase_tickets("Stamford, CT", "Providence, RI", 3, "Blake Lowell")
+      acela_machine.purchase_tickets("Stamford, CT", "Providence, RI", 2, "Blake Lowell")
       stations = fetch_involved_stations(acela, "Stamford, CT", "Providence, RI")
       stations.each do |station_name, i|
         original = acela[i]["remaining seats"]
-        expect(acela_machine.route[i]["remaining seats"]).to eq(original - 3)
+        expect(acela_machine.route[i]["remaining seats"]).to eq(original - 2)
       end
     end
- 
-    it "apologizes when there aren't enough seats to purchase tickets" do
-      message = "Tickets can't be purchased because there are not enough seats. We aplogize for the inconvenience."
-      expect(not_enough_seats).to eq(message)
+
+    let(:not_enough_seats_middle) { surf_machine.purchase_tickets("Surf, CA", "Ventura, CA", 1, "Amy Poehler") }
+    let(:not_enough_seats_begin) { surf_machine.purchase_tickets("Santa Barbara, CA", "Fullerton, CA", 1, "Chelsea Peretti") }
+    let(:not_enough_seats_end) { surf_machine.purchase_tickets("San Luis Obispo, CA", "Carpinteria, CA", 1, "Sarah Silverman") }
+    let(:passenger_exits_after_train_fills_up) { surf_machine.purchase_tickets("Grover Beach, CA", "Santa Barbara, CA", 1, "Zach Galifianakis") }
+    
+    it "apologizes because of a full train in middle of ride and doesn't buy tickets" do
+      ticket_count = surf_machine.tickets.length
+      expect(Ticket).to_not receive(:new)      
+      expect(not_enough_seats_middle).to eq(sorry)
+      expect(surf_machine.tickets.length).to eq(ticket_count)
     end
 
-    it "does not issue a ticket if there aren't enough seats" do
-      ticket_count = acela_machine.tickets.length
-      expect(Ticket).to_not receive(:new)
-      surf_machine.purchase_tickets("Surf, CA", "Ventura, CA", 1, "Javier O'Hara")
+    it "apologizes because of a full train in beginning of ride and doesn't buy tickets" do
+      ticket_count = surf_machine.tickets.length
+      expect(Ticket).to_not receive(:new)      
+      expect(not_enough_seats_begin).to eq(sorry)
       expect(surf_machine.tickets.length).to eq(ticket_count)
+    end
+
+    it "apologizes because of a full train at end of ride and doesn't buy tickets" do
+      ticket_count = surf_machine.tickets.length
+      expect(Ticket).to_not receive(:new)      
+      expect(not_enough_seats_end).to eq(sorry)
+      expect(surf_machine.tickets.length).to eq(ticket_count)
+    end
+
+    it "purchases tickets when the train doesn't get full until after the passenger gets off" do
+      ticket_count = surf_machine.tickets.length
+      ticket = Ticket.new("Grover Beach, CA", "Santa Barbara, CA", "Zach Galifianakis")
+      expect(Ticket).to receive(:new).with("Grover Beach, CA", "Santa Barbara, CA", "Zach Galifianakis").once.and_return(ticket)     
+      expect(passenger_exits_after_train_fills_up).to eq(thank_you)
+      expect(surf_machine.tickets.length).to eq(ticket_count + 1)
+      expect(surf_machine.tickets).to include(ticket)
     end
 
   end
