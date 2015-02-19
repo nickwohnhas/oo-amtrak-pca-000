@@ -1,11 +1,10 @@
 class Ticket
 
-  attr_reader :origin, :destination, :ticket_holder, :price
+  attr_reader :origin, :destination, :ticket_holder
 
-  def initialize(origin, destination, name, price)
+  def initialize(origin, destination, name)
     @origin = origin
     @destination = destination
-    @price = price
     @name = name
   end
 

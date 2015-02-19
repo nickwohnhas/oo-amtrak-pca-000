@@ -1,9 +1,11 @@
-def VendingMachine
+require 'json'
+
+class VendingMachine
 
   attr_accessor :tickets, :route
 
   def initialize(data_file_path)
-    @route =load_json_file(data_file_path)
+    @route = load_json_file(data_file_path)
     @tickets = []
   end
 
@@ -11,12 +13,10 @@ def VendingMachine
     JSON.load(File.read(file_path))
   end
 
-  def find_trip_indexes(origin, destination)
-    route.each_with_index do |station, i| 
-      o_i = i if station["station name"] == origin
-      d_i = i if station["station name"] == destination
+  def find_index(station_name)
+    route.each_with_index do |station, i|
+      return i if station["station name"] == station_name
     end
-    [o_i, d_i]
   end
 
   def tickets_available?(origin_index, destination_index, num_of_tickets)
@@ -26,27 +26,35 @@ def VendingMachine
     true
   end
 
-  def get_price(origin_index, destination_index)
-    (destination_index - origin_index + 1) * 10
-  end
-
   def purchase_tickets(origin, destination, num_of_tickets, name)
-    origin_index, destination_index = find_trip_indexes(origin, destination)
+    origin_index = find_index(origin)
+    destination_index = find_index(destination)
+    flipped = false
     if destination_index < origin_index
        origin_index, destination_index = destination_index, origin_index
+       flipped = true
     end
     if tickets_available?(origin_index, destination_index, num_of_tickets)
-      price = get_price(origin_index, destination_index)
-      num_of_tickets.times do
-        self.tickets << Ticket.new(origin, destination, name, price)
-      end
       adjust_num_of_remaining_seats(origin_index, destination_index, num_of_tickets)
+      origin_index, destination_index = destination_index, origin_index if flipped
+      get_tickets(origin, destination, name, num_of_tickets)
+      "Transaction completed, thank you for choosing Amtrack."
+    else
+      "Tickets can't be purchased because there are not enough seats. We aplogize for the inconvenience."
     end
   end
 
   def adjust_num_of_remaining_seats(origin_index, destination_index, num_of_tickets)
-    self.route[origin_index..destination_index].each do |station|
-      station["remaining seats"] -= num_of_tickets
+    self.route.each_with_index do |station, i|
+      if origin_index <= i && i <= destination_index
+        station["remaining seats"] -= num_of_tickets
+      end
+    end
+  end
+
+  def get_tickets(origin, destination, name, num_of_tickets)
+    num_of_tickets.times do
+      self.tickets << Ticket.new(origin, destination, name)
     end
   end
 
