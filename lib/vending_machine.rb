@@ -40,7 +40,7 @@ class VendingMachine
       adjust_num_of_remaining_seats(origin_index, destination_index, num_of_tickets)
       origin_index, destination_index = destination_index, origin_index if flipped
       get_tickets(origin, destination, name, num_of_tickets)
-      "Transaction completed, thank you for choosing Amtrack."
+      "Transaction completed, thank you for choosing Amtrak."
     else
       "Tickets can't be purchased because there are not enough seats. We aplogize for the inconvenience."
     end

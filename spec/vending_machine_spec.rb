@@ -96,7 +96,7 @@ describe "VendingMachine" do
     end
 
     it "thanks the customer for purchasing tickets" do
-      expect(enough_seats).to eq("Transaction completed, thank you for choosing Amtrack.")
+      expect(enough_seats).to eq("Transaction completed, thank you for choosing Amtrak.")
     end
 
     it "can purchase multiple tickets" do

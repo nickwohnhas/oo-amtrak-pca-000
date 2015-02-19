@@ -4,13 +4,13 @@ languages: ruby
 resources: 1
 ---
 
-# OO Amtrack
+# OO Amtrak
 
-![ticket machine](https://s3-us-west-2.amazonaws.com/web-dev-readme-photos/oo-labs/amtrack.jpg)
+![ticket machine](https://s3-us-west-2.amazonaws.com/web-dev-readme-photos/oo-labs/amtrak.jpg)
 
 ## Background
 
-You've been hired by Amtrack update their ticketing machines. To accomplish this, you're going to create two classes, Ticket and Vending Machine. 
+You've been hired by Amtrak update their ticketing machines. To accomplish this, you're going to create two classes, Ticket and Vending Machine. 
 
 The tickets know three things: 
 
@@ -42,7 +42,7 @@ The ticket vending machines will initialize with a JSON file path (for a reminde
 
 As you can see, the JSON files hold hashes. Each hash represents a station. The hashes are arranged in the order that they appear on the route. For instance, if a rider boards at Solana Beach, they will pass through the Irvine then LA stations before arriving at their destination of Santa Barbara. 
 
-The remaining seats are the number of seats left when the train departs from the station. Therefore, when the train closes its doors and departs from Irvine, there is only one seat left.
+The remaining seats are the number of seats left when the train departs from the station. Therefore, when the train closes its doors and departs from Irvine,  there is only one seat left.
 
 ## Issuing Tickets
 
