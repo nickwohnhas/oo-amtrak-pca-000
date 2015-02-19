@@ -6,7 +6,7 @@ resources: 1
 
 # OO Amtrak
 
-![ticket machine](https://s3-us-west-2.amazonaws.com/web-dev-readme-photos/oo-labs/amtrak.jpg)
+![ticket machine](https://s3-us-west-2.amazonaws.com/web-dev-readme-photos/oo-labs/amtrack.jpg)
 
 ## Background
 
