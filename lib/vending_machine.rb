@@ -19,8 +19,8 @@ class VendingMachine
     end
   end
 
-  def tickets_available?(origin_index, destination_index, num_of_tickets)
-    route[origin_index..destination_index].each do |station|
+  def seats_available?(origin_index, destination_index, num_of_tickets)
+    route[origin_index...destination_index].each do |station|
       return false if station["remaining seats"] < num_of_tickets
     end
     true
@@ -34,7 +34,7 @@ class VendingMachine
        origin_index, destination_index = destination_index, origin_index
        flipped = true
     end
-    if tickets_available?(origin_index, destination_index, num_of_tickets)
+    if seats_available?(origin_index, destination_index, num_of_tickets)
       adjust_num_of_remaining_seats(origin_index, destination_index, num_of_tickets)
       origin_index, destination_index = destination_index, origin_index if flipped
       get_tickets(origin, destination, name, num_of_tickets)
