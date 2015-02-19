@@ -1,6 +1,8 @@
+# your code goes here
+
 class Ticket
 
-  attr_reader :origin, :destination, :ticket_holder
+  attr_reader :origin, :destination, :name
 
   def initialize(origin, destination, name)
     @origin = origin

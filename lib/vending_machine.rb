@@ -1,3 +1,5 @@
+# your code goes here
+
 require 'json'
 
 class VendingMachine

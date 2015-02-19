@@ -5,7 +5,7 @@ describe "VendingMachine" do
   let(:acela)          { JSON.parse(File.read(acela_file))        } 
   let(:surfliner)      { JSON.parse(File.read(surfliner_file))    }
 
-  describe "#initialize pt. 1" do
+  describe "#initialize" do
     it "accepts one argument, a path to a JSON file" do
       expect { VendingMachine.new(acela_file) }.to_not raise_error
     end
