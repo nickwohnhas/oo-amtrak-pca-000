@@ -6,14 +6,14 @@ describe "VendingMachine" do
   let(:surfliner)      { JSON.parse(File.read(surfliner_file))    }
 
   describe "#initialize" do
-    it "accepts one argument, a path to a JSON file" do
-      expect { VendingMachine.new(acela_file) }.to_not raise_error
+    it "accepts two arguments, a path to the route JSON file and location" do
+      expect { VendingMachine.new(acela_file, "New Haven, CT") }.to_not raise_error
     end
   end
 
-  let(:acela_machine)  { VendingMachine.new(acela_file)           }
-  let(:surf_machine)   { VendingMachine.new(surfliner_file)       }
-  let(:machines)       { [acela_machine, surf_machine]            }
+  let(:acela_machine)  { VendingMachine.new(acela_file, "New Haven, CT") }
+  let(:surf_machine)   { VendingMachine.new(surfliner_file, "Grover Beach, CA") }
+  let(:machines)       { [acela_machine, surf_machine] }
 
   describe "#load_json_file" do
     
@@ -51,10 +51,11 @@ describe "VendingMachine" do
     it "calls on #load_json_file and passes it the file path, sets the return value equal to 'route'" do
       result = acela_machine.load_json_file(acela_file)
       expect_any_instance_of(VendingMachine).to receive(:load_json_file).with(acela_file).and_return(result)
-      VendingMachine.new(acela_file)
+      VendingMachine.new(acela_file, "New Haven, CT")
     end
     it "knows about its route" do
       expect(acela_machine.route).to eq(acela)
+      expect(surf_machine.route).to eq(surfliner)
     end
   end
 
@@ -68,31 +69,36 @@ describe "VendingMachine" do
   end
 
   describe "#purchase_tickets" do
-    it "accepts four arguments, the origin, destination, number of tickets, and purchaser's name" do
-      expect { acela_machine.purchase_tickets("Providence, RI", "Wilmington, DE", 1, "Javier O'Hara") } 
+    let(:providence_vm) { VendingMachine.new(acela_file, "Providence, RI") }
+    let(:wilmington_vm) { VendingMachine.new(acela_file, "Providence, RI") }
+    let(:stamford_vm)   { VendingMachine.new(acela_file, "Stamford, CT")   }
+    let(:surf_vm)       { VendingMachine.new(surfliner_file, "Surf, CA")   }
+
+    it "accepts 3 arguments: destination, number of tickets, and purchaser's name" do
+      expect { providence_vm.purchase_tickets("Wilmington, DE", 1, "Javier O'Hara") }.to_not raise_error 
     end
 
-    let(:not_enough_seats) { surf_machine.purchase_tickets("Surf, CA", "Ventura, CA", 1, "Javier O'Hara") }
-    let(:enough_seats) { acela_machine.purchase_tickets("Providence, RI", "Wilmington, DE", 1, "Javier O'Hara") }
+    let(:not_enough_seats) { surf_vm.purchase_tickets("Ventura, CA", 1, "Javier O'Hara") }
+    let(:enough_seats) { providence_vm.purchase_tickets("Wilmington, DE", 1, "Javier O'Hara") }
 
     it "issues a ticket when there are remaining seats and train is headed south" do
       ticket = Ticket.new("Providence, RI", "Wilmington, DE", "Javier O'Hara")
       expect(Ticket).to receive(:new).with("Providence, RI", "Wilmington, DE", "Javier O'Hara").and_return(ticket)
       
-      ticket_count = acela_machine.tickets.length
-      acela_machine.purchase_tickets("Providence, RI", "Wilmington, DE", 1, "Javier O'Hara")
-      expect(acela_machine.tickets.length).to eq(ticket_count + 1)
-      expect(acela_machine.tickets).to include(ticket)
+      ticket_count = providence_vm.tickets.length
+      providence_vm.purchase_tickets("Wilmington, DE", 1, "Javier O'Hara")
+      expect(providence_vm.tickets.length).to eq(ticket_count + 1)
+      expect(providence_vm.tickets).to include(ticket)
     end
 
     it "issues a ticket when there are remaining seats and train is headed north" do
       ticket = Ticket.new( "Wilmington, DE", "Providence, RI", "Javier O'Hara")
       expect(Ticket).to receive(:new).with("Wilmington, DE", "Providence, RI", "Javier O'Hara").and_return(ticket)
       
-      ticket_count = acela_machine.tickets.length
-      acela_machine.purchase_tickets("Wilmington, DE", "Providence, RI", 1, "Javier O'Hara")
-      expect(acela_machine.tickets.length).to eq(ticket_count + 1)
-      expect(acela_machine.tickets).to include(ticket)
+      ticket_count = wilmington_vm.tickets.length
+      wilmington_vm.purchase_tickets("Providence, RI", 1, "Javier O'Hara")
+      expect(wilmington_vm.tickets.length).to eq(ticket_count + 1)
+      expect(wilmington_vm.tickets).to include(ticket)
     end
 
     it "thanks the customer for purchasing tickets" do
@@ -102,20 +108,21 @@ describe "VendingMachine" do
     it "can purchase multiple tickets" do
       ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
       expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
-      ticket_count = acela_machine.tickets.length
-      acela_machine.purchase_tickets("Stamford, CT", "Providence, RI", 3, "Blake Lowell")
-      expect(acela_machine.tickets.length).to eq(ticket_count + 3)
+      ticket_count = stamford_vm.tickets.length
+      
+      stamford_vm.purchase_tickets("Providence, RI", 3, "Blake Lowell")
+      expect(stamford_vm.tickets.length).to eq(ticket_count + 3)
     end
 
     it "reduces the number of seats left by the number of tickets issued when train is headed south" do
       ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
       expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
       
-      acela_machine.purchase_tickets("Stamford, CT", "Providence, RI", 3, "Blake Lowell")
+      stamford_vm.purchase_tickets("Providence, RI", 3, "Blake Lowell")
       stations = fetch_involved_stations(acela, "Stamford, CT", "Providence, RI")
       stations.each do |station_name, i|
         original = acela[i]["remaining seats"]
-        expect(acela_machine.route[i]["remaining seats"]).to eq(original - 3)
+        expect(stamford_vm.route[i]["remaining seats"]).to eq(original - 3)
       end
     end
 
@@ -123,11 +130,11 @@ describe "VendingMachine" do
       ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
       expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
       
-      acela_machine.purchase_tickets("Stamford, CT", "Providence, RI", 3, "Blake Lowell")
+      stamford_vm.purchase_tickets("Providence, RI", 3, "Blake Lowell")
       stations = fetch_involved_stations(acela, "Stamford, CT", "Providence, RI")
       stations.each do |station_name, i|
         original = acela[i]["remaining seats"]
-        expect(acela_machine.route[i]["remaining seats"]).to eq(original - 3)
+        expect(stamford_vm.route[i]["remaining seats"]).to eq(original - 3)
       end
     end
  
@@ -139,10 +146,8 @@ describe "VendingMachine" do
     it "does not issue a ticket if there aren't enough seats" do
       ticket_count = acela_machine.tickets.length
       expect(Ticket).to_not receive(:new)
-      surf_machine.purchase_tickets("Surf, CA", "Ventura, CA", 1, "Javier O'Hara")
-      expect(surf_machine.tickets.length).to eq(ticket_count)
+      surf_vm.purchase_tickets("Ventura, CA", 1, "Javier O'Hara")
+      expect(surf_vm.tickets.length).to eq(ticket_count)
     end
-
   end
-
 end
