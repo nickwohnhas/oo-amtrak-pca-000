@@ -20,10 +20,11 @@ The tickets know three things:
 
 The vending machines know about that route that their stationed on. For instance, a ticketing machine in San Diego only knows about the Pacific Surfliner line while a ticket machine in Rhode Island only knows about the Acela Express line. This makes sense because people would rarely get a ticket from LA to Santa Barbara while they're at a train station in New York, right?
 
-Therefore, the machines only know two things:
+Therefore, the machines only know three things:
 
 * The route information
 * The tickets they've issued
+* Their location
 
 ## Route Info
 
