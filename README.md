@@ -15,10 +15,10 @@ You've been hired by Amtrak update their ticketing machines. To accomplish this,
 The tickets know three things: 
 
 * The name of the station where the rider gets on
-* The station name where they get off
+* The name of the station where the rider gets off
 * The name of the ticket purchaser
 
-The vending machines know about that route that their stationed on. For instance, a ticketing machine in San Diego only knows about the Pacific Surfliner line while a ticket machine in Rhode Island only knows about the Acela Express line. This makes sense because people would rarely get a ticket from LA to Santa Barbara while they're at a train station in New York, right?
+The vending machines know about the route that they're stationed on. For instance, a ticketing machine in San Diego only knows about the Pacific Surfliner line while a ticket machine in Rhode Island only knows about the Northeast line. This makes sense because people would rarely get a ticket from LA to Santa Barbara while they're at a train station in Providence, RI, right?
 
 Therefore, the machines only know three things:
 
@@ -28,7 +28,7 @@ Therefore, the machines only know three things:
 
 ## Route Info
 
-The ticket vending machines will initialize with a JSON file path (for a reminder on loading JSON files, take a look [here](https://hackhands.com/ruby-read-json-file-hash/)). These JSON files look something like this:
+The ticket vending machines will initialize with two arguments. The first is a JSON file path (for a reminder on loading JSON files, take a look [here](https://hackhands.com/ruby-read-json-file-hash/)). These JSON files look something like this:
 
 ```json
 [
@@ -47,9 +47,9 @@ The remaining seats are the number of seats left when the train departs from the
 
 ## Issuing Tickets
 
-Take a look at the above JSON. Since there is at least one remaining seat in the train at each station, the potential Solana Beach to Santa Barbara rider would be issued a ticket. Your program should remember to decrease the number of seats remaining when a ticket is issued.
+Take a look at the above JSON. Since there is at least one remaining seat in the train at each station, a customer who wants to travel from Solana Beach to Santa Barbara would be issued a ticket. Your program should remember to decrease the number of seats remaining when a ticket is issued.
 
-Therefore, after your program creates one new ticket, the remaining seat counts at the origin and destination stations and all stations in between them should go down by one:
+Therefore, after your program creates this new ticket, the remaining seat counts at the origin and destination stations *and all stations in between them* should go down by one:
 
 ```json
 [
@@ -62,7 +62,7 @@ Therefore, after your program creates one new ticket, the remaining seat counts 
 ]
 ```
 
-Now let's say a person wants to go from San Deigo to Los Angeles and the route looks like this:. Since there are no remaining seats when the train lets passengers on in Irvine, your program should not issue them a ticket.
+Now let's say a person wants to go from San Deigo to Los Angeles and the route looks like this the array of hashes above. Since there are no remaining seats when the train lets passengers on in Irvine, your program should not issue them a ticket.
 
 Let's take another example, let's say that a singer wants to go from San Diego to Surf, CA with her pianist the route looks like this:
 
@@ -81,9 +81,9 @@ Since there are is only one remaining seat when the train lets passengers on in 
 
 ## Instructions
 
-This is a test-driven lab so run your testing suite to get started. It is recommended that you get all the Ticket specs to pass before moving onto the vending machine specs.
+This is a test-driven lab so run your testing suite to get started. It is recommended that you get all the Ticket specs to pass before moving on to the vending machine specs.
 
-While only one custom method is tested in the spec, `purchase_tickets`, you should create helper methods for it to keep it clean. We wanted to leave the way you go about creating these helper methods up to you, but that doesn't mean your `purchase_tickets` method should be bloated.
+While only one custom method is tested in the spec, `purchase_tickets`, you should create helper methods for it to keep it clean.
 
 ## Resources
 

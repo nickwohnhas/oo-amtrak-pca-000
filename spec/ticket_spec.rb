@@ -1,6 +1,6 @@
 describe "Ticket" do
 
-  describe "#initialize" do
+  describe ".new" do
     it "is initialized with three arguments: origin, destination, and name" do
       expect { Ticket.new("Providence, RI", "Wilmington, DE", "Rodrigo Santoro") }.to_not raise_error
     end
