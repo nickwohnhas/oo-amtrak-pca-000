@@ -41,7 +41,7 @@ The ticket vending machines will initialize with two arguments. The first is a J
 ]
 ```
 
-As you can see, the JSON files hold hashes. Each hash represents a station. The hashes are arranged in the order that they appear on the route. For instance, if a rider boards at Solana Beach, they will pass through the Irvine then LA stations before arriving at their destination of Santa Barbara. 
+As you can see, the JSON files hold hashes. Each hash represents a station. The hashes are arranged in the order that they appear on the route. For instance, if a rider boards at Solana Beach, they will pass through the Irvine station then the LA station before arriving at their destination of Santa Barbara. 
 
 The remaining seats are the number of seats left when the train departs from the station. Therefore, when the train closes its doors and departs from Irvine,  there is only one seat left.
 
