@@ -139,7 +139,7 @@ describe "VendingMachine" do
       expect(stamford_vm.tickets.length).to eq(ticket_count + 3)
     end
 
-    it "reduces the number of seats left by the number of tickets issued when customer is headed south" do
+    it "reduces the number of seats left by the number of tickets issued when customer is headed north" do
       ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
       expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
       
@@ -151,15 +151,15 @@ describe "VendingMachine" do
       end
     end
 
-    it "reduces the number of seats left by the number of tickets issued when customer is headed north" do
-      ticket = Ticket.new("Stamford, CT", "Providence, RI", "Blake Lowell")
-      expect(Ticket).to receive(:new).exactly(3).times.with("Stamford, CT", "Providence, RI", "Blake Lowell").and_return(ticket)
+    it "reduces the number of seats left by the number of tickets issued when customer is headed south" do
+      ticket = Ticket.new("Providence, RI", "Stamford, CT", "Blake Lowell")
+      expect(Ticket).to receive(:new).exactly(3).times.with("Providence, RI", "Stamford, CT", "Blake Lowell").and_return(ticket)
       
-      stamford_vm.purchase_tickets("Providence, RI", 3, "Blake Lowell")
-      stations = fetch_involved_stations(acela, "Stamford, CT", "Providence, RI")
+      providence_vm.purchase_tickets("Stamford, CT", 3, "Blake Lowell")
+      stations = fetch_involved_stations(acela, "Providence, RI", "Stamford, CT")
       stations.each do |station_name, i|
         original = acela[i]["remaining seats"]
-        expect(stamford_vm.route[i]["remaining seats"]).to eq(original - 3)
+        expect(providence_vm.route[i]["remaining seats"]).to eq(original - 3)
       end
     end
 
