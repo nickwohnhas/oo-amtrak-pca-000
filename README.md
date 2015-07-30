@@ -1,8 +1,4 @@
----
-tags: cs, comp sci, advanced logic, nested data structures, class interactions
-languages: ruby
-resources: 1
----
+
 
 # OO Amtrak
 
