@@ -85,4 +85,4 @@ While only one custom method is tested in the spec, `purchase_tickets`, you shou
 
 * [Hack.hands() - Reading a JSON File](https://hackhands.com/ruby-read-json-file-hash/)
 
-<a href='https://learn.co/lessons/oo-amtrak' data-visibility='hidden'>View this lesson on Learn.co</a>
+<p data-visibility='hidden'>View <a href='https://learn.co/lessons/oo-amtrak' title='OO Amtrak'>OO Amtrak</a> on Learn.co and start learning to code for free.</p>
