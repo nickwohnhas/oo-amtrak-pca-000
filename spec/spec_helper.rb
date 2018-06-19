@@ -1,3 +1,4 @@
+require 'pry'
 require_relative '../lib/ticket.rb'
 require_relative '../lib/vending_machine.rb'
 
